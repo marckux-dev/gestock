@@ -182,12 +182,15 @@ export class StockListComponent implements OnInit, OnDestroy {
         moveItemInArray(this.filteredStocksByCategory[currentCategory],
           $event.previousIndex,
           $event.currentIndex);
+        this.filteredStocksByCategory[currentCategory] = [...this.filteredStocksByCategory[currentCategory]];
         this.stocksService.move(stock, index).subscribe();
       } else {
         transferArrayItem(this.filteredStocksByCategory[previousCategory],
           this.filteredStocksByCategory[currentCategory],
           $event.previousIndex,
           $event.currentIndex);
+        this.filteredStocksByCategory[previousCategory] = [...this.filteredStocksByCategory[previousCategory]];
+        this.filteredStocksByCategory[currentCategory] = [...this.filteredStocksByCategory[currentCategory]];
         this.stocksService.move(stock, index, currentCategory).subscribe();
       }
   }
