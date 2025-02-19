@@ -1,1 +1,1 @@
-{"version":3,"sourceRoot":"","sources":[],"names":[],"mappings":"","file":"stock-list.component.css"}
+{"version":3,"sourceRoot":"","sources":["stock-list.component.scss"],"names":[],"mappings":"AACA;EACE;EACA;EACA;;;AAKF;EACE;;;AAGF;EACE;;;AAGF;EACE","file":"stock-list.component.css"}

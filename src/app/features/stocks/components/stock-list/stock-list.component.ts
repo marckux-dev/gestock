@@ -1,4 +1,15 @@
-import {Component, computed, inject, OnDestroy, OnInit, Signal, signal, WritableSignal} from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  EffectRef,
+  inject,
+  OnDestroy,
+  OnInit,
+  Signal,
+  signal,
+  WritableSignal
+} from '@angular/core';
 import {MaterialModule} from '../../../../material/material/material.module';
 import {Stock} from '../../interfaces/stock.interface';
 import {StocksService} from '../../services/stocks.service';
@@ -19,7 +30,7 @@ import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CleanTailPipe} from '../../../products/pipes/clean-tail.pipe';
 import {UserPreferencesService} from '../../../../shared/services/user-preferences.service';
 import {CategorizedStocks} from '../../helpers/stock.helper';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {normalizeString} from '../../../../shared/helpers/strings.helpers';
 import {MatDialog} from '@angular/material/dialog';
 import {QrScannerComponent} from '../../../../shared/components/qr-scanner/qr-scanner.component';
@@ -40,7 +51,7 @@ interface Editable {
   imports: [MaterialModule, ExpansionPanelComponent, UpperCasePipe, NgForOf, SortStringsPipe, NgIf, FormsModule, CleanTailPipe, ReactiveFormsModule],
   templateUrl: './stock-list.component.html',
   standalone: true,
-  styles: ``,
+  styleUrls: ['stock-list.component.scss'],
 })
 export class StockListComponent implements OnInit, OnDestroy {
 
@@ -62,29 +73,14 @@ export class StockListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['short_name', 'maximum_storage', 'current_storage'];
 
   private _searchQuery: WritableSignal<string> = signal<string>('');
-
-  filteredStocksByCategory: Signal<CategorizedStocks> = computed(() => {
-    const query = normalizeString(this._searchQuery()).trim();
-    const original = this.stocksByCategory();
-    if (!query) return original;
-    const filtered: CategorizedStocks = {}
-    for (const category in original) {
-      const byId = original[category].filter(stock => stock.id === query);
-      if (byId.length>0) {
-        filtered[category] = byId;
-        return filtered;
-      }
-      const filteredCategory = original[category].filter(stock => (
-        stock.product.search_vector!.includes(query)
-      ));
-      if (filteredCategory.length > 0)
-        filtered[category] = filteredCategory;
-    }
-    return filtered;
+  searching   : Signal<boolean>   = computed(() => this._searchQuery() !== '');
+  private updateSearch: EffectRef = effect(() => {
+    this.stocksByCategory();
+    this.filterStocks(this._searchQuery());
   });
 
-  categories  : Signal<string[]>  = computed(() => Object.keys(this.filteredStocksByCategory()));
-  searching   : Signal<boolean>   = computed(() => this._searchQuery() !== '');
+  filteredStocksByCategory: CategorizedStocks = {};
+  categories: string[] = [];
 
   private routeSubscription?: Subscription;
 
@@ -101,12 +97,39 @@ export class StockListComponent implements OnInit, OnDestroy {
         distinctUntilChanged()
       )
       .subscribe(val => this._searchQuery.set(val || ''));
+
   }
 
   ngOnDestroy(): void {
     if (this.routeSubscription) {
       this.routeSubscription.unsubscribe();
     }
+    this.updateSearch.destroy();
+  }
+
+  filterStocks(filter: string): void {
+    const query: string = normalizeString(filter).trim();
+    const original: CategorizedStocks = this.stocksByCategory();
+    if (!query) {
+      this.filteredStocksByCategory = original;
+      this.categories = Object.keys(original);
+      return;
+    }
+    const filtered: CategorizedStocks = {};
+    for (const category in original) {
+      const byId = original[category].filter(stock => stock.id === query);
+      if (byId.length > 0) {
+       filtered[category] = byId;
+       break;
+      }
+      const filteredCategory = original[category].filter(stock => (
+        stock.product.search_vector!.includes(query)
+      ));
+      if (filteredCategory.length > 0)
+        filtered[category] = filteredCategory;
+    }
+    this.filteredStocksByCategory = filtered;
+    this.categories = Object.keys(filtered);
   }
 
   toggleCategory(category: string, $event: boolean): void {
@@ -142,6 +165,7 @@ export class StockListComponent implements OnInit, OnDestroy {
             return throwError(()=>err);
           })
         )
+        .subscribe()
     }
     stock.oldValue = undefined;
     stock.editing = null;
@@ -155,9 +179,16 @@ export class StockListComponent implements OnInit, OnDestroy {
     const index: number = $event.currentIndex;
     if (stock)
       if (previousCategory === currentCategory) {
-        this.stocksService.move(stock, index).subscribe(() => {});
+        moveItemInArray(this.filteredStocksByCategory[currentCategory],
+          $event.previousIndex,
+          $event.currentIndex);
+        this.stocksService.move(stock, index).subscribe();
       } else {
-        this.stocksService.move(stock, index, currentCategory).subscribe(() => {});
+        transferArrayItem(this.filteredStocksByCategory[previousCategory],
+          this.filteredStocksByCategory[currentCategory],
+          $event.previousIndex,
+          $event.currentIndex);
+        this.stocksService.move(stock, index, currentCategory).subscribe();
       }
   }
 

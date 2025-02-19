@@ -9,15 +9,15 @@
   </button>
 </mat-form-field>
 
-<shared-expansion-panel *ngFor="let category of (categories() | sortStrings)"
+<shared-expansion-panel *ngFor="let category of (categories | sortStrings)"
                         [expanded]="expandedCategories().includes(category) || searching()"
                         [title]="category | uppercase"
                         (toggleChange)="toggleCategory(category, $event)"
 >
 
-  <table mat-table [dataSource]="filteredStocksByCategory()[category]"
-         cdkDropList [id]="category" [cdkDropListData]="stocksByCategory()[category]"
-         [cdkDropListConnectedTo]="categories()"
+  <table mat-table [dataSource]="filteredStocksByCategory[category]"
+         cdkDropList [id]="category" [cdkDropListData]="filteredStocksByCategory[category]"
+         [cdkDropListConnectedTo]="categories"
          (cdkDropListDropped)="drop($event)"
          class="table table-hover"
   >
@@ -59,6 +59,7 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"
         cdkDrag [cdkDragStartDelay]="200" [cdkDragData]="row"
+        class="row-element"
     >
     </tr>
 

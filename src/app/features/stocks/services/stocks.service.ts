@@ -23,7 +23,6 @@ export class StocksService {
   // Signals
   private _center          : WritableSignal<Center | null>     = signal<Center | null>(null);
   private _stocksByCategory: WritableSignal<CategorizedStocks> = signal<CategorizedStocks>({});
-  categories               : Signal<string[]>                  = computed(() => Object.keys(this._stocksByCategory()));
 
   get center(): Signal<Center | null> {
     return this._center.asReadonly();
@@ -49,8 +48,8 @@ export class StocksService {
   }
 
   update(stock: Stock): Observable<Stock> {
-    const {id, product: _, ...data} = stock;
-    return this.http.patch<Stock>(`${this.baseUrl}/stocks/${id}`, data, { headers: this.authService.getHeaders() })
+    const {id, maximum_storage, current_storage} = stock;
+    return this.http.patch<Stock>(`${this.baseUrl}/stocks/${id}`, {maximum_storage, current_storage}, { headers: this.authService.getHeaders() })
       .pipe(tap(()=> this.fetchStocks()));
   }
 
