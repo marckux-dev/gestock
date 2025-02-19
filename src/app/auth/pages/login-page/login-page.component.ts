@@ -27,8 +27,8 @@ export class LoginPageComponent implements OnInit {
   private router     : Router      = inject(Router);
 
   form: FormGroup = this.fb.group({
-    full_name: ['Regular User', [Validators.required]],
-    password: ['User1234', [Validators.required]],
+    full_name: ['', [Validators.required]],
+    password: ['', [Validators.required]],
   });
 
   ngOnInit() {
