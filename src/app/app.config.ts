@@ -1,5 +1,5 @@
 import {APP_INITIALIZER, ApplicationConfig, provideZoneChangeDetection} from '@angular/core';
-import {provideRouter, RouteReuseStrategy, withRouterConfig} from '@angular/router';
+import {provideRouter, RouteReuseStrategy, withHashLocation, withRouterConfig} from '@angular/router';
 
 import { routes } from './app.routes';
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
@@ -10,7 +10,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideAnimationsAsync(),
-    provideRouter(routes),
+    provideRouter(routes,  withHashLocation()),
     provideHttpClient(withInterceptorsFromDi()),
     {
       provide: APP_INITIALIZER,
