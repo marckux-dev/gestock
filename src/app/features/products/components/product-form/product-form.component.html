@@ -1,0 +1,73 @@
+<div class="row justify-content-center mt-4">
+  <div class="col-12 col-md-8">
+    <mat-card class="shadow-lg border-0 rounded-3">
+      <mat-card-content class="p-4">
+        <h2 class="text-center mb-4">
+          {{ isEditing() ? 'Editar Producto' : 'Crear Producto' }}
+        </h2>
+        <form [formGroup]="productForm" (ngSubmit)="saveProduct()" class="p-4">
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="name" required />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Nombre Corto</mat-label>
+            <input matInput formControlName="short_name" required />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Categoría</mat-label>
+            <input matInput formControlName="category" required [matAutocomplete]="auto" />
+          </mat-form-field>
+
+          <mat-autocomplete #auto>
+            <mat-option *ngFor="let category of categories()" [value]="category">
+              {{ category }}
+            </mat-option>
+          </mat-autocomplete>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Principio Activo</mat-label>
+            <input matInput formControlName="active_principle" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Sinónimos</mat-label>
+            <input matInput formControlName="synonyms" />
+          </mat-form-field>
+
+          <!-- BUTTONS -->
+          <div class="row px-2" >
+
+            <!-- SAVE -->
+            <button type="submit"
+                    mat-raised-button color="primary" class="mt-2 col-12"
+                    [disabled]="productForm.invalid">
+              {{ isEditing() ? 'Guardar Cambios' : 'Crear Producto' }}
+            </button>
+
+          </div>
+
+        </form>
+
+        <!-- Additional Links -->
+        <div class="text-center mt-1 d-flex justify-content-between align-items-center px-4" >
+          <!-- DELETE -->
+          <button *ngIf="isAdmin() && isEditing()"
+                  mat-raised-button color="warn" class="col-5"
+                  (click)="deleteProduct()">
+            Borrar Producto
+          </button>
+          <span class="flex-grow-1"></span>
+          <a mat-button color="accent" class="col-5" routerLink="/dashboard/products">Lista de Productos</a>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+
+

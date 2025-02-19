@@ -1,0 +1,38 @@
+<h2 class="text-center mb-4">Login</h2>
+<form [formGroup]="form" (ngSubmit)="onSubmit()" >
+  <!-- Full Name field -->
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Nombre</mat-label>
+    <input
+      formControlName = "full_name"
+      matInput type="text" required placeholder="Introduce tu nombre" class="px-2">
+  </mat-form-field>
+
+  <!-- Password Field -->
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Contraseña</mat-label>
+    <input
+      formControlName="password"
+      matInput type="password" required placeholder="Introduce tu contraseña" class="px-2">
+  </mat-form-field>
+
+  <!-- Error message from API -->
+  <mat-error *ngIf="errorMessage" class="alert alert-danger text-center mt-2">
+    {{ errorMessage }}
+  </mat-error>
+
+  <!-- Login Button -->
+  <div class="d-grid">
+    <button
+      type="submit"
+      [disabled]="!form.valid"
+      mat-raised-button color="primary" class="w-100"
+    >
+      Login
+    </button>
+  </div>
+</form>
+<!-- Additional Links -->
+<div class="text-center mt-3 d-flex justify-content-end">
+  <a mat-button color="accent" routerLink="/auth/forgot-password">Forgot password?</a>
+</div>

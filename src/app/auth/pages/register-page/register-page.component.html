@@ -1,0 +1,23 @@
+<h2 class="text-center mb-4">New user</h2>
+<form [formGroup]="form" (ngSubmit)="onSubmit()" >
+
+  <!-- Username field -->
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Nombre del Usuario</mat-label>
+    <input
+      formControlName="full_name"
+      matInput type="text" required placeholder="Introduce el nombre" class="px-2">
+  </mat-form-field>
+
+  <!-- Error message from API -->
+  <mat-error *ngIf="errorMessage" class="alert alert-danger text-center mt-2">
+    {{ errorMessage }}
+  </mat-error>
+
+  <!-- Login Button -->
+  <div class="d-grid">
+    <button type="submit" mat-raised-button color="primary" class="w-100" [disabled]="form.invalid">
+      Register
+    </button>
+  </div>
+</form>

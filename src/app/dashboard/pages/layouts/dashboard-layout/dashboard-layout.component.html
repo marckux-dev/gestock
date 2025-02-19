@@ -1,0 +1,78 @@
+<div class="container-md p-2 vh-100 d-flex flex-column" >
+  <! -- The Heading -->
+  <mat-toolbar color="primary" class="d-flex justify-content-between align-items-center">
+    <span>GeStock</span>
+    <span class="d-flex align-items-center">
+      <span class="me-2"> {{ user()?.full_name }} </span>
+      <button mat-icon-button (click)="logout()" >
+        <mat-icon>logout</mat-icon>
+      </button>
+    </span>
+  </mat-toolbar>
+  <! -- -->
+  <mat-drawer-container class="flex-grow-1">
+    <mat-drawer
+      #drawer
+      [mode]="!isDesktop()? 'over': 'side'"
+      [opened]="isDesktop()"
+    >
+      <div class="drawer-header d-flex justify-content-between align-items-center p-2" *ngIf="!isDesktop()">
+        <span>Navegación</span>
+        <button mat-icon-button (click)="drawer.close()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <mat-accordion>
+
+        <shared-expansion-panel title="Stocks">
+          <shared-expansion-panel-a
+            *ngFor="let c of centers"
+            [routerLink]="['stock', (c.name | lowercase)]"
+            (click)="closeDrawer()"
+          >
+            {{ c.name }}
+          </shared-expansion-panel-a>
+        </shared-expansion-panel>
+
+        <shared-expansion-panel title="Usuarios" *ngIf="isAdmin()">
+          <shared-expansion-panel-a routerLink="users/register" (click)="closeDrawer()">
+            Añadir Usuario
+          </shared-expansion-panel-a>
+          <shared-expansion-panel-a routerLink="users" (click)="closeDrawer()">
+            Listar Usuarios
+          </shared-expansion-panel-a>
+        </shared-expansion-panel>
+
+        <shared-expansion-panel title="Productos">
+          <shared-expansion-panel-a routerLink="products" (click)="closeDrawer()">
+            Lista de Productos
+          </shared-expansion-panel-a>
+          <shared-expansion-panel-a routerLink="products/new" (click)="closeDrawer()" *ngIf="isAdmin()">
+            Añadir un Producto
+          </shared-expansion-panel-a>
+          <shared-expansion-panel-a routerLink="products/discontinued">
+            Productos Descatalogados
+          </shared-expansion-panel-a>
+        </shared-expansion-panel>
+
+      </mat-accordion>
+
+    </mat-drawer>
+
+    <mat-drawer-content>
+      <button mat-icon-button (click)="drawer.toggle()" class="mt-2" *ngIf="!isDesktop()" >
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <div class="p-3">
+        <router-outlet/>
+      </div>
+
+    </mat-drawer-content>
+
+
+  </mat-drawer-container>
+</div>
+
+

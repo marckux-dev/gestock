@@ -1,1 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
+.w-5ch {
+  width: 5ch;
+}
+
+.w-10ch {
+  width: 10ch;
+}
+
+.w-15ch {
+  width: 15ch;
+}
+
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-spinner {
+  -moz-appearance: textfield; /* Firefox */
+}

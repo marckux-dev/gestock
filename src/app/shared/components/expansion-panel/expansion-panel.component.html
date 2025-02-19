@@ -1,0 +1,12 @@
+<mat-expansion-panel hideToggle
+                     [expanded]="expanded"
+                     class="mb-2">
+  <mat-expansion-panel-header class="d-flex justify-content-between pe-0"
+                              (click)="toggle()">
+    <mat-panel-title class="fw-bold">
+      <span>{{ title }}</span>
+    </mat-panel-title>
+    <mat-icon>{{ expanded? 'keyboard_arrow_up': 'keyboard_arrow_down' }}</mat-icon>
+  </mat-expansion-panel-header>
+  <ng-content/>
+</mat-expansion-panel>

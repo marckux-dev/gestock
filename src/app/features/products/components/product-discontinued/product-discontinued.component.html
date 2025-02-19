@@ -1,0 +1,39 @@
+<h1 class="text-center mb-2" xmlns="http://www.w3.org/1999/html">Productos Descatalogados</h1>
+
+<shared-expansion-panel *ngFor="let category of (categories() | sortStrings)"
+                        [title]="category | uppercase"
+                        [expanded]="expandedCategories().includes(category)"
+                        (toggleChange)="toggleCategory(category, $event)">
+
+  <table mat-table [dataSource]="discontinuedByCat()[category]" class="table table-hover">
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef class="text-start fw-bold pb-3">Nombre</th>
+      <td mat-cell *matCellDef="let product">{{ product.name | cleanTail }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="short_name">
+      <th mat-header-cell *matHeaderCellDef class="text-start fw-bold pb-4">Nombre Corto</th>
+      <td mat-cell *matCellDef="let product">{{ product.short_name | cleanTail }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef class="text-start fw-bold pb-4">Fecha</th>
+      <td mat-cell *matCellDef="let product">{{ product.short_name | getDate }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef class="text-end fw-bold pb-4">Recuperar</th>
+      <td mat-cell *matCellDef="let product" class="text-end">
+        <button mat-icon-button color="primary" (click)="restore(product.id)">
+          <mat-icon>undo</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns();"></tr>
+
+  </table>
+</shared-expansion-panel>
+
