@@ -1,7 +1,8 @@
 <div class="container">
+  <!-- Welcome card -->
   <div class="row justify-content-center my-3">
     <div class="col-md-8">
-      <mat-card class="shadow-lg border-0 rounded-3">
+      <mat-card class="shadow">
         <mat-card-header class="text-center py-3">
           <mat-card-title>
             <h2>Bienvenido a GeStock</h2>
@@ -12,10 +13,27 @@
             GeStock es un gestor de stocks. Puedes mantener al día el stock de tus productos y crear informes y pedidos.
           </p>
           <p>
-            Para empezar utiliza en el menú a la izquierda para navegar por las distintas opciones.
+            Para empezar, despliega el menú a la izquierda o haz clic en uno de los centros abajo para ver sus stocks.
           </p>
         </mat-card-content>
       </mat-card>
     </div>
   </div>
+
+  <!-- Fancy links to stocks pages using Bootstrap utilities -->
+  <div class="gap-3 mt-4 row justify-content-center">
+    <mat-card
+      class="shadow rounded border-0 col-md-8"
+      *ngFor="let center of centers"
+      [routerLink]="['/dashboard', 'stock', center.name | lowercase]"
+      style="cursor: pointer">
+      <mat-card-header class="d-flex align-items-center">
+        <mat-card-title class="mb-0">{{ center.name }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Ver stock</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>
+
