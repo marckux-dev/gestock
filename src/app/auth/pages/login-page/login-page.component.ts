@@ -11,7 +11,6 @@ import {Router, RouterLink} from '@angular/router';
     MaterialModule,
     ReactiveFormsModule,
     NgIf,
-    RouterLink
   ],
   templateUrl: './login-page.component.html',
   standalone: true,

@@ -10,6 +10,9 @@ export class LongPressDirective {
   @Output() longPress = new EventEmitter<Event>();
 
   private timer: any;
+  private startX: number = 0;
+  private startY: number = 0;
+  private tresshold: number = 10; // px
 
   // For desktop mouse events
   @HostListener('mousedown', ['$event'])
@@ -26,7 +29,20 @@ export class LongPressDirective {
   // For mobile touch events
   @HostListener('touchstart', ['$event'])
   onTouchStart(event: TouchEvent): void {
+    const touch = event.touches[0];
+    this.startX = touch.clientX;
+    this.startY = touch.clientY;
     this.startTimer(event);
+  }
+
+  @HostListener('touchmove', ['$event'])
+  onTouchMove(event: TouchEvent): void {
+    const touch = event.touches[0];
+    const deltaX = Math.abs(this.startX - touch.clientX);
+    const deltaY = Math.abs(this.startY - touch.clientY);
+    if (deltaX > this.tresshold || deltaY > this.tresshold) {
+      this.clearTimer();
+    }
   }
 
   @HostListener('touchend')
