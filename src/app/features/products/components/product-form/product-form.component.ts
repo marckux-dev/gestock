@@ -66,7 +66,7 @@ export class ProductFormComponent implements OnInit {
   }
 
   private createProduct(product: ProductDtoInterface) {
-    if (!this.isAdmin) return;
+    if (!this.isAdmin()) return;
     this.productsService.create(product)
       .subscribe({
         next: product => {
@@ -95,7 +95,7 @@ export class ProductFormComponent implements OnInit {
   }
 
   deleteProduct(): void {
-    if (!this.isAdmin) return;
+    if (!this.isAdmin()) return;
     if (!this.isEditing())
       return;
     this.confirmationService.confirm(`Se dispone a eliminar el producto`, '¿Está seguro?')

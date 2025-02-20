@@ -34,7 +34,9 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
 import {normalizeString} from '../../../../shared/helpers/strings.helpers';
 import {MatDialog} from '@angular/material/dialog';
 import {QrScannerComponent} from '../../../../shared/components/qr-scanner/qr-scanner.component';
-
+import {LongPressDirective} from '../../../../shared/directives/long-press.directive';
+import {AutoselectDirective} from '../../../../shared/directives/autoselect.directive';
+import {BlurOnKeysDirective} from '../../../../shared/directives/blur-on-keys.directive';
 enum Column {
   NAME= 'short_name',
   MAX = 'maximum_storage',
@@ -48,7 +50,7 @@ interface Editable {
 
 @Component({
   selector: 'stocks-stock-list',
-  imports: [MaterialModule, ExpansionPanelComponent, UpperCasePipe, NgForOf, SortStringsPipe, NgIf, FormsModule, CleanTailPipe, ReactiveFormsModule],
+  imports: [MaterialModule, ExpansionPanelComponent, UpperCasePipe, NgForOf, SortStringsPipe, NgIf, FormsModule, CleanTailPipe, ReactiveFormsModule, LongPressDirective, AutoselectDirective, BlurOnKeysDirective],
   templateUrl: './stock-list.component.html',
   standalone: true,
   styleUrls: ['stock-list.component.scss'],
