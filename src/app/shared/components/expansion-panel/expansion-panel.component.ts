@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MaterialModule} from '../../../material/material/material.module';
-import {MatExpansionPanel} from '@angular/material/expansion';
 
 @Component({
   selector: 'shared-expansion-panel',
@@ -18,11 +17,14 @@ export class ExpansionPanelComponent  {
   @Input() expanded: boolean = false;
   @Output() toggleChange = new EventEmitter<boolean>();
 
-  @ViewChild('me') expansionPanel!: MatExpansionPanel;
+  onOpened(): void {
+    this.expanded = true;
+    this.toggleChange.emit(true);
+  }
 
-  toggle(): void {
-    this.expanded = !this.expanded;
-    this.toggleChange.emit(this.expanded);
+  onClosed(): void {
+    this.expanded = false;
+    this.toggleChange.emit(false);
   }
 
 
