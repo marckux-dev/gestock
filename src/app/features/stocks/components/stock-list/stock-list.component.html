@@ -7,6 +7,12 @@
   <button matSuffix mat-icon-button (click)="openQrScanner()">
     <mat-icon>qr_code_scanner</mat-icon>
   </button>
+  <button *ngIf="searchControl.value"
+          matSuffix mat-icon-button aria-label="Clear"
+          (click)="searchControl.setValue('')"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
 </mat-form-field>
 
 <shared-expansion-panel *ngFor="let category of (categories | sortStrings)"
@@ -72,3 +78,13 @@
   </table>
 
 </shared-expansion-panel>
+
+<button
+  [disabled]="isFilteredEmpty()"
+  mat-raised-button color="primary" class="w-100 mt-4"
+  (click)="printQrs()"
+>
+  Imprimir QRs <mat-icon>print</mat-icon>
+</button>
+
+

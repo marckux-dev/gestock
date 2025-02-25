@@ -14,7 +14,7 @@ import {MaterialModule} from '../../../../material/material/material.module';
 import {Stock} from '../../interfaces/stock.interface';
 import {StocksService} from '../../services/stocks.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {NgForOf, NgIf, UpperCasePipe} from '@angular/common';
+import {JsonPipe, NgForOf, NgIf, UpperCasePipe} from '@angular/common';
 import {
   catchError,
   debounceTime,
@@ -37,6 +37,7 @@ import {QrScannerComponent} from '../../../../shared/components/qr-scanner/qr-sc
 import {LongPressDirective} from '../../../../shared/directives/long-press.directive';
 import {AutoselectDirective} from '../../../../shared/directives/autoselect.directive';
 import {BlurOnKeysDirective} from '../../../../shared/directives/blur-on-keys.directive';
+import {PrintStocksService} from '../../services/print-stocks.service';
 enum Column {
   NAME= 'short_name',
   MAX = 'maximum_storage',
@@ -50,7 +51,7 @@ interface Editable {
 
 @Component({
   selector: 'stocks-stock-list',
-  imports: [MaterialModule, ExpansionPanelComponent, UpperCasePipe, NgForOf, SortStringsPipe, NgIf, FormsModule, CleanTailPipe, ReactiveFormsModule, LongPressDirective, AutoselectDirective, BlurOnKeysDirective],
+  imports: [MaterialModule, ExpansionPanelComponent, UpperCasePipe, NgForOf, SortStringsPipe, NgIf, FormsModule, CleanTailPipe, ReactiveFormsModule, LongPressDirective, AutoselectDirective, BlurOnKeysDirective, JsonPipe],
   templateUrl: './stock-list.component.html',
   standalone: true,
   styleUrls: ['stock-list.component.scss'],
@@ -65,6 +66,7 @@ export class StockListComponent implements OnInit, OnDestroy {
   route           : ActivatedRoute          = inject(ActivatedRoute);
   router          : Router                  = inject(Router);
   dialog          : MatDialog               = inject(MatDialog);
+  printStocks     : PrintStocksService      = inject(PrintStocksService);
 
   searchControl = new FormControl('');
 
@@ -132,6 +134,10 @@ export class StockListComponent implements OnInit, OnDestroy {
     }
     this.filteredStocksByCategory = filtered;
     this.categories = Object.keys(filtered);
+  }
+
+  isFilteredEmpty(): boolean {
+    return Object.keys(this.filteredStocksByCategory).length === 0;
   }
 
   toggleCategory(category: string, $event: boolean): void {
@@ -204,4 +210,10 @@ export class StockListComponent implements OnInit, OnDestroy {
         this.searchControl.setValue(result);
     });
   }
+
+  printQrs(): void {
+    const stocks: Stock[] = Object.values(this.filteredStocksByCategory).flat();
+    this.printStocks.printStocks(stocks).then();
+  }
+
 }
